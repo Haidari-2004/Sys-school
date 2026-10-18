@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %}
+
+{% block title %}مدیریت اساتید | سیستم مکتب{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0" style="border-radius: 8px ; box-shadow: 0px 0px 7px rgb(196, 195, 195);">
+    <div class="d-flex justify-content-between align-items-center mb-4" style="padding: 10px;">
+        <div>
+            <h4 class="fw-bold mb-1">مدیریت اساتید</h4>
+            <p class="text-muted small mb-0">لیست اساتید و کادر آموزشی مکتب</p>
+        </div>
+        <a href="{% url 'teacher_create' %}" class="btn btn-primary px-3 rounded-3">
+            <i class="bi bi-person-plus-fill me-1"></i> ثبت استاد جدید
+        </a>
+    </div>
+
+    <form method="GET" action="{% url 'teacher_list' %}" id="teacherFilterForm" class="row g-2 mb-4 align-items-center " >
+
+    <div class="col-md-5">
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text" name="q" value="{{query|default:'' }}" class="form-control border-start-0 " placeholder="جستجو بر اساس آی‌دی، نام یا تخلص...">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+       <select name="status" class="form-select bg-white" onchange="this.form.submit()">
+            <option value="Active" {% if status_filter == 'Active' %}selected{% endif %}> استادان فعال</option>
+            <option value="Inactive" {% if status_filter == 'Inactive' %}selected{% endif %}>استادان غیرفعال</option>
+            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>همه استادان</option>
+        </select>
+    </div>
+
+    <div class="col-md-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary px-3 shadow-sm">
+            <i class="bi bi-search me-1"></i> جستجو
+        </button>
+        {% if query or status_filter != 'Active' %}
+            <a href="{% url 'teacher_list' %}" class="btn btn-outline-secondary px-3 ">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> بازنشانی
+            </a>
+        {% endif %}
+    </div>
+</form>
+    <div class="card border-0 shadow-sm rounded-4 bg-white">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>   
+                            <th class="ps-2">شماره</th>
+                            <th class="ps-4">استاد</th>
+                            <th>شماره تماس</th>
+                            <th>ایمیل</th>
+                            <th>تاریخ تقرر</th>
+                            <th>وضعیت</th>
+                            <th class="text-center">عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for teacher in teachers %}
+                        <tr>
+                            <td class="ps-2 fw-bold">{{forloop.counter}}</td>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning-subtle text-warning rounded-circle p-2 me-2 d-flex align-items-center justify-content-center" style="width:38px; height:38px;">
+                                        <i class="bi bi-person-badge fs-5"></i>
+                                    </div>
+                                    <div class="fw-bold">{{ teacher.first_name }} {{ teacher.last_name }}</div>
+                                </div>
+                            </td>
+                            <td>{{ teacher.phone|default:"-" }}</td>
+                            <td>{{ teacher.email|default:"-" }}</td>
+                            <td>{{ teacher.hire_date|default:"-" }}</td>
+                            <td>
+                                {%if teacher.status|lower == 'active' or teacher.status == 'فعال'%}
+                                    <span class="badge bg-success-subtle text-success">فعال</span>
+                                {%else%}
+                                    <span class="badge bg-danger "> غیر فعال   </span>
+                                {%endif%}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'teacher_edit' teacher.teacher_id %}" class="btn btn-light text-warning btn-sm rounded-2 me-1">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a href="{% url 'teacher_delete' teacher.teacher_id %}" class="btn btn-light text-danger btn-sm rounded-2">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">هیچ استادی ثبت نشده است.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

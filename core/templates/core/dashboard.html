@@ -1,0 +1,153 @@
+{% extends 'core/base.html' %}
+
+{% block title %}داشبورد اصلی | مکتب دانش نور{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <div class="mb-4">
+        <h4 class="fw-bold mb-1">Dashboard Overview</h4>
+        <p class="text-muted small">Here's quick overview of your school</p>
+    </div>
+
+    <!--Stats Cards-->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3">
+                        <i class="bi bi-people-fill fs-4"></i>
+                    </div>
+                    <span class="badge bg-success-subtle text-success fw-medium">+8.2%</span>
+                </div>
+                <span class="text-muted small">Total Students</span>
+                <h3 class="fw-bold my-1">{{ total_students }}</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">Compared to last month</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-3">
+                        <i class="bi bi-person-badge-fill fs-4"></i>
+                    </div>
+                    <span class="badge bg-success-subtle text-success fw-medium">+3.6%</span>
+                </div>
+                <span class="text-muted small">Total Teachers</span>
+                <h3 class="fw-bold my-1">{{ total_teachers }}</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">Compared to last month</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="bg-info bg-opacity-10 text-info p-2 rounded-3">
+                        <i class="bi bi-building fs-4"></i>
+                    </div>
+                    <span class="badge bg-info-subtle text-info fw-medium">+2</span>
+                </div>
+                <span class="text-muted small">Total Classes</span>
+                <h3 class="fw-bold my-1">{{ total_classes }}</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">New classes this year</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="bg-success bg-opacity-10 text-success p-2 rounded-3">
+                        <i class="bi bi-check-circle-fill fs-4"></i>
+                    </div>
+                    <span class="badge bg-success-subtle text-success fw-medium">+1.4%</span>
+                </div>
+                <span class="text-muted small">Today's Attendance</span>
+                <h3 class="text-dark">320 </h3>
+                <h3 class="fw-bold my-1">{{ attendance_rate }}</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">Attendance rate today</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- chart حاضری و فعالیت‌های اخیر -->
+    <div class="row g-3">
+        <!-- chart -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6 class="fw-bold mb-0">Attendance Overview</h6>
+                        <small class="text-muted">Student attendance during this week</small>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm rounded-2">This Week</button>
+                </div>
+                <canvas id="attendanceChart" height="120"></canvas>
+            </div>
+        </div>
+
+        <!-- فعالیت‌های اخیر -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Recent Activity</h6>
+                    <a href="#" class="small text-decoration-none">View All</a>
+                </div>
+
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex gap-3 align-items-center">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2"><i class="bi bi-person-plus"></i></div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small">New student registered</div>
+                            <small class="text-muted">Ahmad joined Class 10-A</small>
+                        </div>
+                        <small class="text-muted">10m ago</small>
+                    </div>
+
+                    <div class="d-flex gap-3 align-items-center">
+                        <div class="bg-success bg-opacity-10 text-success rounded-circle p-2"><i class="bi bi-check2"></i></div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small">Attendance Record</div>
+                            <small class="text-muted">Class 9-B attendance completed</small>
+                        </div>
+                        <small class="text-muted">32m ago</small>
+                    </div>
+                    <div class="d-flex gap-3 align-items-center">
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2"><i class="bi bi-cash"></i></div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small">Monthly fee received</div>
+                            <small class="text-muted">Monthly fee received from student</small>
+                        </div>
+                        <small class="text-muted">1h ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu'],
+            datasets: [{
+                label: 'Attendance %',
+                data: [90, 72, 85, 94, 91, 75],
+                borderColor: '#0d6efd',
+                backgroundColor: 'rgba(13, 110, 253, 0.05)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
+{% endblock %}

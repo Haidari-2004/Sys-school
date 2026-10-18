@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">{{ title }}</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <h6 class="fw-bold text-primary mb-3">مشخصات ولی / سرپرست:</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">نام</label>
+                                {{ p_form.first_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">تخلص</label>
+                                {{ p_form.last_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">شماره تماس</label>
+                                {{ p_form.phone }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">ایمیل</label>
+                                {{ p_form.email }}
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">آدرس</label>
+                                {{ p_form.address }}
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    {{ p_form.isactive }}
+                                    <label class="form-check-label fw-bold">حساب فعال است</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="fw-bold text-primary mb-3">ارتباط با شاگرد:</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">انتخاب شاگرد</label>
+                                {{ sp_form.student }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">نسبت با شاگرد</label>
+                                {{ sp_form.relationship }}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    {{ sp_form.isprimary }}
+                                    <label class="form-check-label fw-bold">ولی اصلی شاگرد است</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    {{ sp_form.isemergencycontact }}
+                                    <label class="form-check-label fw-bold">شماره تماس اضطراری است</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'parent_list' %}" class="btn btn-light">انصراف</a>
+                            <button type="submit" class="btn btn-primary px-4">ذخیره اطلاعات</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#id_student').select2({
+            theme: 'bootstrap-5',
+            placeholder: '-- نام، تخلص یا کد شاگرد را تایپ کنید --',
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "شاگردی با این مشخصات یافت نشد";
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

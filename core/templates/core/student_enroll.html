@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>ثبت نام شاگرد جدید و شمولیت در صنف</h5>
+                </div>
+                <div class="card-body p-4">
+                    <!-- بخش نمایش پیام‌های سیستم -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show my-2" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+                    <!-- بخش نمایش خطاهای اعتبارسنجی فرم -->
+                    {% if student_form.errors or parent_form.errors or enrollment_form.errors %}
+                        <div class="alert alert-danger my-2">
+                            <strong>لطفاً موارد زیر را اصلاح کنید:</strong>
+                            <ul>
+                                {% for field, errors in student_form.errors.items %}
+                                    <li>شاگرد ({{ field }}): {{ errors|striptags }}</li>
+                                {% endfor %}
+                                {% for field, errors in parent_form.errors.items %}
+                                    <li>ولی ({{ field }}): {{ errors|striptags }}</li>
+                                {% endfor %}
+                                {% for field, errors in enrollment_form.errors.items %}
+                                    <li>شمولیت صنف ({{ field }}): {{ errors|striptags }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <!-- مشخصات شاگرد -->
+                        <h6 class="text-primary border-bottom pb-2 mb-3">۱. مشخصات شخصی شاگرد</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ student_form.student_number.label }}</label>
+                                {{ student_form.student_number }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ student_form.first_name.label }}</label>
+                                {{ student_form.first_name }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ student_form.last_name.label }}</label>
+                                {{ student_form.last_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{{ student_form.gender.label }}</label>
+                                {{ student_form.gender }} <!-- کشویی -->
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">{{ student_form.phone.label }}</label>
+                                {{ student_form.phone }}
+                            </div>
+                        </div>
+
+                        <!-- مشخصات ولی -->
+                        <h6 class="text-primary border-bottom pb-2 mb-3">۲. مشخصات پدر / ولی</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ parent_form.first_name.label }}</label>
+                                {{ parent_form.first_name }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ parent_form.relationship.label }}</label>
+                                {{ parent_form.relationship }} <!-- کشویی -->
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">{{ parent_form.phone.label }}</label>
+                                {{ parent_form.phone }}
+                            </div>
+                        </div>
+
+                        <!-- صنف و سال تحصیلی -->
+                        
+                        <!-- ۳. صنف و سال تحصیلی -->
+                            <h5 class="fw-bold mb-3 text-primary">۳. صنف و سال تحصیلی</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">انتخاب صنف</label>
+                                    {{ enrollment_form.class_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">سال تحصیلی</label>
+                                    {{ enrollment_form.academic_year }}
+                                </div>
+                            </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                            <a href="{% url 'fee_list' %}" class="btn btn-outline-secondary">انصراف</a>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-lg me-1"></i> ثبت و ذخیره کامل
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% block title %}غیرفعال‌سازی شاگرد{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
+                <div class="text-warning mb-3">
+                    <i class="bi bi-person-x-fill display-1"></i>
+                </div>
+                <h4 class="fw-bold mb-2">تأیید غیرفعال‌سازی شاگرد</h4>
+                <p class="text-muted mb-4">
+                    وضعیت شاگرد <strong>{{ student.first_name }} {{ student.last_name }}</strong> (کد: {{ student.student_number }}) به حالت <strong>Inactive (غیرفعال)</strong> تغییر خواهد کرد. سوابق وی در دیتابیس محفوظ می‌ماند.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{% url 'student_list' %}" class="btn btn-light px-4">انصراف</a>
+                        <button type="submit" class="btn btn-warning px-4">غیرفعال شود</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

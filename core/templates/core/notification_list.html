@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container-fluid py-3">
+
+    <!-- دکمه ایجاد -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1"><i class="bi bi-bell-fill text-primary me-2"></i>مدیریت و گزارش اعلانات</h4>
+            <p class="text-muted small mb-0">تاریخچه پیام‌ها، وضعیت ارسال (SMS / واتسپ) و اطلاع‌رسانی‌ها</p>
+        </div>
+        <a href="{% url 'notification_create' %}" class="btn btn-primary px-3 shadow-sm">
+            <i class="bi bi-send-plus-fill me-1"></i> ارسال اعلان جدید
+        </a>
+    </div>
+
+    <!-- فریم سرچ و فیلتر -->
+    <div class="p-3 mb-4 rounded-3 border-end border-4 border-primary shadow-sm" style="background-color: #f8fafc;">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="q" value="{{ query }}" class="form-control border-start-0" placeholder="جستجو در عنوان، متن پیام، نام ولی یا شماره تماس...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="type" class="form-select bg-white" onchange="this.form.submit()">
+                    <option value="">همه انواع اعلانات</option>
+                    <option value="Attendance" {% if type_filter == 'Attendance' %}selected{% endif %}>حاضری و ورود/خروج</option>
+                    <option value="Announcement" {% if type_filter == 'Announcement' %}selected{% endif %}>اطلاعیه عمومی</option>
+                    <option value="Fee" {% if type_filter == 'Fee' %}selected{% endif %}>یادآوری فیس</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-3"><i class="bi bi-search me-1"></i> جستجو</button>
+                {% if query or type_filter %}
+                    <a href="{% url 'notification_list' %}" class="btn btn-outline-secondary px-3 bg-white">بازنشانی</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- جدول گزارش ارسال -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">#</th>
+                            <th>گیرنده (ولی)</th>
+                            <th>شماره تماس</th>
+                            <th>عنوان و متن پیام</th>
+                            <th>نوع</th>
+                            <th>کانال</th>
+                            <th>وضعیت ارسال</th>
+                            <th>تاریخ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recipients %}
+                        <tr>
+                            <td class="ps-3 fw-bold">{{ forloop.counter }}</td>
+                            <td>{{ item.parent.first_name }} {{ item.parent.last_name }}</td>
+                            <td dir="ltr" class="text-end">{{ item.parent.phone }}</td>
+                            <td>
+                                <strong>{{ item.notification.title }}</strong>
+                                <p class="text-muted small mb-0 text-truncate" style="max-width: 300px;">{{ item.notification.message }}</p>
+                            </td>
+                            <td>
+                                <span class="badge bg-info text-dark">{{ item.notification.notificationtype }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">{{ item.channel }}</span>
+                            </td>
+                            <td>
+                                {% if item.deliverystatus == 'Sent' or item.deliverystatus == 'Delivered' %}
+                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>ارسال شده</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark"><i class="bi bi-clock me-1"></i>در انتظار</span>
+                                {% endif %}
+                            </td>
+                            <td class="small text-muted">{{ item.createdat|date:"Y/m/d - H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">هیچ اعلانی یافت نشد.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

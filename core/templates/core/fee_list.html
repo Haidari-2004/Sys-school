@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold"><i class="bi bi-cash-stack me-2"></i>مدیریت فیس شاگردان</h4>
+        <a href="{% url 'fee_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> ثبت فیس جدید</a>
+    </div>
+        {%if messages%}
+                        <div class="container mt-3">
+                            {%for message in messages%}
+                                <div class="alert alert-{{message.tags}} alert-dismissiable fade show" role="alert">
+                                    {{message}}
+                                    <button type="button" class="btn-close " data-bs-dismissiable="alert" aria-label="Close" ></button>
+
+                                </div>
+                            {%endfor%}
+                        </div>
+                        {%endif%}
+    <div class="card border-0 shadow-sm">        
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <form method="GET" class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <input type="text" name="q" value="{{search_query}}" class="form-control" placeholder="جستجوی نام یا تخلص شاگرد...">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">همه وضیعت ها</option>
+                            <option value="Unpaid"{%if status_filter == 'Unpaid'%} selected{%endif%}>پرداخت نشده</option>
+                            <option value="paid"{%if status_filter == 'paid'%} selected{%endif%}>پرداخت شده</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary">جستجـو</button>
+                    </div>
+                </form> 
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>شماره</th>
+                            <th>نام شاگرد</th>
+                            <th>صنف</th>
+                            <th>نوع فیس</th>
+                            <th>ماه</th>
+                            <th>مبلغ کل</th>
+                            <th>تخفیف</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                   
+                        {% for fee in fees %}
+                        <tr>
+                            <td>{{ fee.fee_id }}</td>
+                            <td class="fw-bold">{{ fee.enrollment.student.first_name }} {{ fee.enrollment.student.last_name }}</td>
+                            <td>{{fee.enrollment.class_field.class_name}}</td>
+                            <td>{{ fee.get_feetype_display }}</td>
+                            <td>ماه {{ fee.fee_month }}</td>
+                            <td>{{ fee.amount }} {{ fee.currency }}</td>
+                            <td class="text-danger">{{ fee.discount_amount|default:"0" }}</td>
+                            <td>
+                                {% if fee.status == 'Paid' %}
+                                    <span class="badge bg-success">پرداخت شده</span>
+                                {% elif fee.status == 'Partial' %}
+                                    <span class="badge bg-warning text-dark">قسمتی پرداخت شده</span>
+                                {% else %}
+                                    <span class="badge bg-danger">پرداخت نشده</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if fee.status != 'Paid' %}
+                                <a href="{% url 'record_payment' fee.fee_id %}" class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-receipt me-1"></i> ثبت دریافت
+                                </a>
+                                {% else %}
+                                <span class="text-muted fs-7">تکمیل شده</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="py-4 text-muted">هیچ صورت‌حساب فیسی ثبت نشده است.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

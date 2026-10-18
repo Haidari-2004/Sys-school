@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block title %}پروفایل شاگرد | {{ student.first_name }} {{ student.last_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- هدر صفحه -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">پروفایل و اطلاعات شاگرد</h4>
+            <p class="text-muted small mb-0">نمایش جزئیات مشخصات فردی و تعلیمی</p>
+        </div>
+        <div>
+            <a href="{% url 'student_edit' student.student_id %}" class="btn btn-outline-warning me-2">
+                <i class="bi bi-pencil-square"></i> ویرایش
+            </a>
+            <a href="{% url 'student_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-right"></i> بازگشت به لیست
+            </a>
+        </div>
+    </div>
+        <!-- student_info -->
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card border-1 shadow-sm rounded-4 text-center p-4 bg-white " >
+                <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 90px; height: 90px;">
+                    <i class="bi bi-person-fill fs-1"></i>
+                </div>
+                <h5 class="fw-bold mb-3">{{ student.first_name }} {{ student.last_name }}</h5>
+                <span class="badge bg-primary-subtle text-primary mb-3" style="height: 30px; font-size: 16px; cursor: pointer;">کد شاگردی: #{{ student.student_id }}</span>
+                
+                <hr class="text-muted opacity-25">
+                
+                <div class="text-start small">
+                    <div class="mb-2"><strong>جنسیت:</strong> {% if student.gender == 'Male' %}ذکور{% else %}اناث{% endif %}</div>
+                    <div class="mb-2"><strong>شماره تماس:</strong> {{ student.phone_number|default:"ثبت نشده" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-info-circle me-1"></i> مشخصات عمومی</h6>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="text-muted small">نام</label>
+                        <div class="fw-semibold">{{ student.first_name }}</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-muted small"> تخلص فامیلی</label>
+                        <div class="fw-semibold">{{ student.last_name }}</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-muted small">نام پدر</label>
+                        <div class="fw-semibold">{{ student.father_name|default:"ثبت نشده" }}</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-muted small">شماره تماس</label>
+                        <div class="fw-semibold">{{ student.phone_number|default:"ثبت نشده" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

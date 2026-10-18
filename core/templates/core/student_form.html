@@ -1,0 +1,274 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ title|default:"فرم شاگرد" }}{% endblock %}
+<style>
+   
+    .form-control ,.form-select ,.ts-control{
+        min-height: 35px !important;
+        border-radius: 8px;
+        padding: 0.5rem 0.85rem !important;
+        border: 1px solid #cad4da !important;
+        font-size: 0.95rem !important;
+        box-shadow: all 0.2s ease-in-out !important;   
+    }
+    .form-control:focus,.form-select:focus, .ts-control:focus{
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.75) !important;
+    }
+    .ts-wrapper .ts-control{
+        display: flex;
+        align-items: center;
+        background-color: #ffffff !important;
+    }
+    .switches-container{
+        min-height: 35px;
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+        background-color: #ffffff;
+    }
+</style>
+{% block content %}
+<div class="container py-4" dir="rtl">
+    <div class="row justify-content-center"> 
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary bg-gradient text-white py-3 px-4 d-flex justify-content-between align-items-center bg-opacity-75">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-person-plus-fill me-2  ">  ثبت شاگرد جدید</i>
+                    </h5>
+                    <span class="badge bg-white text-primary rounded-pill px-3 py-2 fw-semibold"> فرم اطلاعات</span>
+                </div>
+                        <div class="card-body p-3  bg-white">
+                                <form method="post" novalidate>
+                                    {%csrf_token%}
+                                    {%if form.errors%}
+                                     <div class="alert alert-danger rounded-4 mb-4 shadow-sm">
+                                        <h6 class="fw-bold mb-2"><i class="bi bi-exclanation-triangle-fill me-2"></i>لطفا خطایی زیر را برطرف کنید</h6>
+                                        <ul class="mb-0 ps-3">
+                                            {%for field, errors in form.errors.items%}
+                                                {%for error in errors%}
+                                                    <li><strong>{{field}}:</strong>{{error}}</li>
+                                                {%endfor%}
+                                            {%endfor%}
+                                        </ul>
+                                     </div>
+                                    {%endif%}
+
+                                    
+                                    <div class="mb-3">
+                                        <h5 class="text-primary fw-bold border-bottom pb-2 mb-3">
+                                            <i class="bi bi-card-heading me-1"></i>  اطلاعات هویت
+                                        </h5>
+                                        <div class="row g-3">
+                                            <div class="row g-3">
+                                                <div class="col-md-3">
+                                                <label class=" form-label fw-smibold text-dark">شماره اساس<span class="text-danger ">*</span></label>
+                                                    {{form.student_number}}
+                                            </div>
+                                            <div class="col-md-4 ">
+                                                <label  class="form-label fw-bold ">نام شاگرد <span class="text-danger">*</span></label>
+                                                    {{form.first_name}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label  class="form-label fw-bold">تخلص شاگرد<span class="text-danger">*</span></label>
+                                                {{form.last_name}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label  class="form-label fw-bold">جنسیت<span class="text-danger">*</span></label>
+                                                {{form.gender}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label  class="form-label fw-bold">تاریخ تولد</label>
+                                                {{form.date_of_birth}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label  class="form-label fw-bold">تاریخ شمولیت</label>
+                                                {{form.admission_date}}
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label  class="form-label fw-bold">شماره تماس</label>
+                                                {{form.phone}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label  class="form-label fw-bold">وضیعت شاکرد</label>
+                                                {{form.status}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label  class="form-label fw-bold">آدرس سکونت</label>
+                                                {{form.address}}
+                                            </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="mb-4">
+                                            <div class="bg-primary bg-opacity-10 p-2 px-3 m-1 rounded-3 mb-3 border border-primary-subtle">
+                                                <h6 class="text-primary fw-bold border-bottom pb-2 mb-0">
+                                                    <i class="bi bi-people me-2 "  ></i>مشخصات والد/ سرپرست
+                                                </h6>
+                                            </div>
+                                            <div class="row g-3 align-items-end">
+
+                                                <div class="col-md-6">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <label for="id_parent" class="form-label fw-semibold text-dark mb-0">انتخاب والد (جستجو نام یا شماره)</label>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary shadow-lg  py-0 px-2 fw-bold shaow-sm" style="font-size:0.8rem; border-radius: 6px;" data-bs-toggle="modal" data-bs-target="#quickParentmodal">
+                                                            <i class="fas fa-user-plus me-1"></i>والدین جدید<span>+</span>
+                                                         </button>
+                                                    </div>
+                                                    {{form.parent}}
+                                                </div>
+                                                 <div class="col-md-3">
+                                                    <label class="form-label fw-semibold">نسبت با شاگرد</label>
+                                                    {{form.relationship}}
+                                                </div>
+                                                   <div class="col-md-5 ">
+                                                    <div class="d-flex align-items-center justify-content-around switches-container  gap-4">
+                                                        <div class="form-check form-switch mb-0">
+                                                            {{form.isprimary}} 
+                                                            <label class="form-check-label fw-medium text-dark  " >سرپرست اصلی</label>  
+                                                    </div>
+                                                         <div class="form-check form-switch mb-0">
+                                                            {{form.isemergencycontact}} 
+                                                            <label class="form-check-label me-1 fw-medium "> تماس اظـطراری</label>  
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                         <div class="d-flex justify-content-end gap-2 pt-4 border-top mt-4">
+                                    <a href="{% url 'student_list' %}" class="btn  btn-outline-secondary px-4 rounded-3 fw-semibold">انصراف</a>
+                                    <button type="submit" class="btn btn-primary  px-4 rounded-3 fw-bold shadow-sm  opacity-75 ">ذخیره تغییرات</button>
+                                </div>
+                                    </div>
+                               
+                            </form>
+                        </div>
+                    </div>
+<div class="modal fade" id="quickParentmodal" tabindex="-1" aria-labelledby="quickParentmodalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header bg-primary text-white py-3">
+                        <h6 class="modal-title fw-bold" id="quickParentmodalLabel">
+                           <i class="bi bi-person-plus  me-1 "></i>ثبت سریع مشخصات والد جدید
+                        </h6>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                     <form id="quickParentForm">
+                     {%csrf_token%}
+                        <div class="modal-body p-4">
+                                 <div class="mb-3">
+                                    <label class="form-label fw-semibold">نام والد <span class="text-danger">*</span></label>
+                                    <input type="text" name="first_name" class="form-control" required placeholder="نام سرپرست">
+                                  </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">تخلص<span class="text-danger">*</span></label>
+                                        <input type="text" name="last_name" class="form-control" required placeholder="تخلص">
+                                     </div>
+
+                                     <div class="mb-3">
+                                        <label class="form-label fw-semibold">شماره تماس<span class="text-danger">*</span></label>
+                                        <input type="text" name="phone" class="form-control" required placeholder="07xxxxxxxx">
+                                      </div>
+
+                                        <div class="mb-3 ">
+                                           <label class="form-label fw-semibold">آدرس سکونت</label>
+                                            <input type="text" name="address" class="form-control rounded-3"placeholder="ادرس سکونت فعلی">
+                                        </div>
+
+                                    <div class="mb-3 ">
+                                                  <label class="form-label fw-semibold">ایمیل</label>
+                                    <input type="text" name="email" class="form-control rounded-3" placeholder="ایمیل آدرس">
+                            </div>
+                        </div>
+                                    <div class="modal-footer bg-light border-top-0">
+                                              <button type="button" class="btn btn-secondary rounded-3 " data-bs-dismiss="modal">انصراف</button>
+                                             <button type="submit" class="btn btn-primary rounded-3 fw-bold px-4 " id="saveParentBtn">ذخیره </button>
+                                    </div>
+                                 </form>
+                            </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- in student from  parent pop up  JS-->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // ۱. مقداردهی و فعال‌سازی Tom-Select با قابلیت جستجوی کامل
+    let parentSelect = document.querySelector('#id_parent'); //  فیلد والد در فرم 
+    let tomSelectInstance = null;
+    
+    if (parentSelect) {
+        tomSelectInstance = new TomSelect(parentSelect, {
+            create: false,
+            placeholder: "...نام یا شماره والد را جستجو کنید"
+        });
+    }
+
+    // ۲. مدیریت ارسال فرم ثبت سریع والد از طریق AJAX
+    const quickParentForm = document.getElementById('quickParentForm');
+    
+    if (quickParentForm) {
+        quickParentForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // جلوگیری از رفرش شدن صفحه
+            
+            let formData = new FormData(this);
+            
+            fetch("{% url 'quick_parent_create' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": document.querySelector('#quickParentForm [name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (tomSelectInstance) {
+                        tomSelectInstance.addOption({value: data.id, text: data.text});
+                        tomSelectInstance.setValue(data.id);
+                    }
+
+                    let modalElement = document.getElementById('quickParentmodal');
+                    if (modalElement) {
+                        let closeBtn = modalElement.querySelector('[data-bs-dismiss="modal"]') || modalElement.querySelector('.btn-close');
+                        if (closeBtn) { closeBtn.click(); }
+
+                        modalElement.classList.remove('show');
+                        modalElement.style.display = 'none';
+                        modalElement.setAttribute('aria-hidden', 'true');
+                        modalElement.removeAttribute('aria-modal');
+                        modalElement.removeAttribute('role');
+
+                        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                        document.body.classList.remove('modal-open');
+                        document.body.style.overflow = '';
+                        document.body.style.paddingRight = '';
+                    }
+
+                    quickParentForm.reset();
+                }
+                else {
+                    alert(data.error || "خطا در ثبت اطلاعات والد");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("خطایی در ارتباط با سرور رخ داد.");
+            });
+        });
+    }
+});
+</script>
+
+{% endblock %}
